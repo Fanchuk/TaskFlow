@@ -1,0 +1,8 @@
+{
+  "name": "taskflow",
+  "private": true,
+  "workspaces": [
+    "taskflow-frontend",
+    "taskflow-backend"
+  ]
+}
