@@ -1,13 +1,98 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Get a free hosted Postgres database in seconds: `npx create-db`
-
 generator client {
-  provider = "prisma-client"
-  output   = "../generated/prisma"
+  provider = "prisma-client-js"
 }
 
 datasource db {
   provider = "postgresql"
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String
+  fullName  String
+  avatarUrl String?
+  createdAt DateTime @default(now())
+
+  subscription  Subscription?
+  ownedProjects Project[]       @relation("ProjectOwner")
+  memberships   ProjectMember[]
+  comments      Comment[]       
+}
+
+model Subscription {
+  id        String   @id @default(cuid())
+  plan      String
+  status    String   @default("active")
+  createdAt DateTime @default(now())
+
+  userId String @unique
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Project {
+  id        String   @id @default(cuid())
+  title     String
+  desc      String
+  status    String   @default("active") // active | on-hold | completed
+  color     String   @default("indigo")
+  createdAt DateTime @default(now())
+
+  ownerId String
+  owner   User   @relation("ProjectOwner", fields: [ownerId], references: [id], onDelete: Cascade)
+
+  tasks   Task[]
+  members ProjectMember[]
+}
+
+model Task {
+  id        String    @id @default(cuid())
+  title     String
+  status    String    @default("todo")     // todo | in_progress | done
+  priority  String    @default("medium")   // low | medium | high
+  order     Int       @default(0)          
+  dueDate   DateTime?
+  createdAt DateTime  @default(now())
+  doneAt    DateTime?
+
+  projectId String
+  project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  comments    Comment[]
+  attachments Attachment[]
+}
+
+model ProjectMember {
+  id     String @id @default(cuid())
+  role   String @default("member")
+
+  userId    String
+  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  projectId String
+  project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, projectId])
+}
+
+model Comment {
+  id        String   @id @default(cuid())
+  body      String
+  createdAt DateTime @default(now())
+
+  taskId String
+  task   Task @relation(fields: [taskId], references: [id], onDelete: Cascade)
+
+  authorId String
+  author   User   @relation(fields: [authorId], references: [id], onDelete: Cascade)
+}
+
+model Attachment {
+  id        String   @id @default(cuid())
+  name      String
+  size      Int     
+  mime      String  
+  createdAt DateTime @default(now())
+
+  taskId String
+  task   Task @relation(fields: [taskId], references: [id], onDelete: Cascade)
 }
