@@ -12,12 +12,34 @@ model User {
   password  String
   fullName  String
   avatarUrl String?
+  status    String   @default("offline") // online | offline | away
+  role      String   @default("member")  // admin | member | viewer
+  settings  Json     @default("{}")
   createdAt DateTime @default(now())
 
   subscription  Subscription?
   ownedProjects Project[]       @relation("ProjectOwner")
   memberships   ProjectMember[]
-  comments      Comment[]       
+  comments      Comment[]
+  sentMessages  Message[]
+  folders       Folder[]
+  files         File[]
+  sessions      Session[]
+}
+
+model Session {
+  id         String   @id @default(cuid())
+  userId     String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tokenHash  String   @unique
+  device     String?
+  browser    String?
+  os         String?
+  ip         String?
+  lastActive DateTime @default(now())
+  createdAt  DateTime @default(now())
+
+  @@index([userId])
 }
 
 model Subscription {
@@ -50,7 +72,7 @@ model Task {
   title     String
   status    String    @default("todo")     // todo | in_progress | done
   priority  String    @default("medium")   // low | medium | high
-  order     Int       @default(0)          
+  order     Int       @default(0)
   dueDate   DateTime?
   createdAt DateTime  @default(now())
   doneAt    DateTime?
@@ -63,8 +85,8 @@ model Task {
 }
 
 model ProjectMember {
-  id     String @id @default(cuid())
-  role   String @default("member")
+  id   String @id @default(cuid())
+  role String @default("member")
 
   userId    String
   user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -89,10 +111,55 @@ model Comment {
 model Attachment {
   id        String   @id @default(cuid())
   name      String
-  size      Int     
-  mime      String  
+  size      Int
+  mime      String
   createdAt DateTime @default(now())
 
   taskId String
   task   Task @relation(fields: [taskId], references: [id], onDelete: Cascade)
+}
+
+model Message {
+  id        String   @id @default(cuid())
+  body      String
+  createdAt DateTime @default(now())
+
+  senderId String
+  sender   User   @relation(fields: [senderId], references: [id], onDelete: Cascade)
+}
+
+model Invitation {
+  id        String   @id @default(cuid())
+  email     String
+  role      String   @default("member")
+  message   String?
+  projects  String   
+  status    String   @default("pending") // pending | accepted
+  createdAt DateTime @default(now())
+}
+
+model Folder {
+  id        String   @id @default(cuid())
+  name      String
+  color     String   @default("blue") // blue | amber | green | orange
+  createdAt DateTime @default(now())
+
+  ownerId String
+  owner   User   @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+
+  files File[]
+}
+
+model File {
+  id        String   @id @default(cuid())
+  name      String
+  size      Int      
+  mime      String   
+  createdAt DateTime @default(now())
+
+  ownerId String
+  owner   User   @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+
+  folderId String?
+  folder   Folder? @relation(fields: [folderId], references: [id], onDelete: SetNull)
 }

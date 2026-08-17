@@ -1,37 +1,35 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
+import { PrismaModule } from './prisma/prisma.module';
 import { AuthModule } from './auth/auth.module';
-import { UsersModule } from './users/users.module';
+import { SubscriptionsModule } from './subscriptions/subscriptions.module';
 import { ProjectsModule } from './projects/projects.module';
+import { StatsModule } from './stats/stats.module';
 import { TasksModule } from './tasks/tasks.module';
 import { CommentsModule } from './comments/comments.module';
 import { AttachmentsModule } from './attachments/attachments.module';
-import { TeamsModule } from './teams/teams.module';
-import { FilesModule } from './files/files.module';
-import { NotificationsModule } from './notifications/notifications.module';
+import { UsersModule } from './users/users.module';
+import { ChatModule } from './chat/chat.module';
+import { InvitationsModule } from './invitations/invitations.module';
 import { AiModule } from './ai/ai.module';
-import { PrismaModule } from './prisma/prisma.module';
-import { SubscriptionsModule } from './subscriptions/subscriptions.module';
-import { StatsModule } from './stats/stats.module';
+import { FilesModule } from './files/files.module';
+import { SessionsModule } from './sessions/sessions.module';
 
 @Module({
   imports: [
+    PrismaModule,
     AuthModule,
-    UsersModule,
+    SubscriptionsModule,
     ProjectsModule,
+    StatsModule,
     TasksModule,
     CommentsModule,
     AttachmentsModule,
-    TeamsModule,
-    FilesModule,
-    NotificationsModule,
+    UsersModule,
+    ChatModule,
+    InvitationsModule,
     AiModule,
-    PrismaModule,
-    SubscriptionsModule,
-    StatsModule,
+    FilesModule,
+    SessionsModule,
   ],
-  controllers: [AppController],
-  providers: [AppService],
 })
 export class AppModule {}
