@@ -17,14 +17,16 @@ model User {
   settings  Json     @default("{}")
   createdAt DateTime @default(now())
 
-  subscription  Subscription?
-  ownedProjects Project[]       @relation("ProjectOwner")
-  memberships   ProjectMember[]
-  comments      Comment[]
-  sentMessages  Message[]
-  folders       Folder[]
-  files         File[]
-  sessions      Session[]
+  subscription   Subscription?
+  ownedProjects  Project[]       @relation("ProjectOwner")
+  memberships    ProjectMember[]
+  comments       Comment[]
+  sentMessages   Message[]
+  folders        Folder[]
+  files          File[]
+  fileShares     FileShare[]
+  sessions       Session[]
+  fileActivities FileActivity[]  // <--- ДОДАНО ЗВ'ЯЗОК З АКТИВНІСТЮ
 }
 
 model Session {
@@ -151,15 +153,46 @@ model Folder {
 }
 
 model File {
+  id         String   @id @default(cuid())
+  name       String
+  size       Int      
+  mime       String   
+  createdAt  DateTime @default(now())
+
+  ownerId    String
+  owner      User     @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+
+  folderId   String?
+  folder     Folder?  @relation(fields: [folderId], references: [id], onDelete: SetNull)
+
+  shares     FileShare[]
+
+  isStarred  Boolean   @default(false)
+  deletedAt  DateTime?
+
+  @@index([ownerId])
+}
+
+model FileShare {
+  id     String @id @default(cuid())
+  fileId String
+  file   File   @relation(fields: [fileId], references: [id], onDelete: Cascade)
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([fileId, userId])
+  @@index([fileId])
+}
+
+model FileActivity {
   id        String   @id @default(cuid())
-  name      String
-  size      Int      
-  mime      String   
+  action    String   // "uploaded", "shared", "deleted", "restored", etc.
+  fileName  String   
+  
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
   createdAt DateTime @default(now())
 
-  ownerId String
-  owner   User   @relation(fields: [ownerId], references: [id], onDelete: Cascade)
-
-  folderId String?
-  folder   Folder? @relation(fields: [folderId], references: [id], onDelete: SetNull)
+  @@index([userId])
 }

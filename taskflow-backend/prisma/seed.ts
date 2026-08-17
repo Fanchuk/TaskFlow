@@ -1,60 +1,69 @@
 // prisma/seed.ts
+import { Pool } from 'pg';
 import { PrismaPg } from '@prisma/adapter-pg';
 import { PrismaClient } from '@prisma/client';
+import 'dotenv/config';
 
-const adapter = new PrismaPg({
-  connectionString:
-    'postgresql://neondb_owner:npg_ixe1yz8vQZmN@ep-mute-mouse-asq2zfj9-pooler.c-4.eu-central-1.aws.neon.tech/saas_auth?sslmode=require&channel_binding=require',
-});
+const connectionString = process.env.DATABASE_URL;
 
+if (!connectionString) {
+  throw new Error('DATABASE_URL is not set in .env');
+}
+
+const pool = new Pool({ connectionString });
+const adapter = new PrismaPg(pool);
 const prisma = new PrismaClient({ adapter });
 
 async function main() {
-  // знаходимо юзера
-  const user = await prisma.user.findFirst();
-  if (!user) throw new Error('No user found — register first');
+  // Знаходимо конкретного юзера (або першого доступного)
+  const user =
+    (await prisma.user.findUnique({
+      where: { email: 'mostafa@test.com' }, // вкажіть ваш робочий email
+    })) ?? (await prisma.user.findFirst());
+
+  if (!user) {
+    throw new Error('No user found — register in the app first');
+  }
+
+  console.log(`🌱 Seeding data for user: ${user.email} (${user.id})`);
 
   // 3 проєкти
-  await Promise.all([
-    prisma.project.upsert({
-      where: { id: 'seed-project-1' },
-      update: {},
-      create: {
-        id: 'seed-project-1',
-        title: 'TaskFlow Workspace',
-        desc: 'Full-stack task management app',
-        color: 'indigo',
-        status: 'active',
-        ownerId: user.id,
-      },
-    }),
-    prisma.project.upsert({
-      where: { id: 'seed-project-2' },
-      update: {},
-      create: {
-        id: 'seed-project-2',
-        title: 'Fintask Landing',
-        desc: 'Marketing landing page',
-        color: 'purple',
-        status: 'active',
-        ownerId: user.id,
-      },
-    }),
-    prisma.project.upsert({
-      where: { id: 'seed-project-3' },
-      update: {},
-      create: {
-        id: 'seed-project-3',
-        title: 'Habit Tracker',
-        desc: 'Daily habits tracking app',
-        color: 'green',
-        status: 'active',
-        ownerId: user.id,
-      },
-    }),
-  ]);
+  const projects = [
+    {
+      id: 'seed-project-1',
+      title: 'TaskFlow Workspace',
+      desc: 'Full-stack task management app',
+      color: 'indigo',
+      status: 'active',
+      ownerId: user.id,
+    },
+    {
+      id: 'seed-project-2',
+      title: 'Fintask Landing',
+      desc: 'Marketing landing page',
+      color: 'purple',
+      status: 'active',
+      ownerId: user.id,
+    },
+    {
+      id: 'seed-project-3',
+      title: 'Habit Tracker',
+      desc: 'Daily habits tracking app',
+      color: 'green',
+      status: 'active',
+      ownerId: user.id,
+    },
+  ];
 
-  // задачі з doneAt по різних днях для графіку
+  for (const project of projects) {
+    await prisma.project.upsert({
+      where: { id: project.id },
+      update: { ownerId: user.id },
+      create: project,
+    });
+  }
+
+  // Задачі з датами виконання для аналітики
   const now = new Date();
   const day = (n: number) => new Date(now.getFullYear(), now.getMonth(), n);
 
@@ -85,9 +94,15 @@ async function main() {
     });
   }
 
-  console.log('✅ Seed done');
+  console.log('✅ Seed completed successfully');
 }
 
 main()
-  .catch(console.error)
-  .finally(() => prisma.$disconnect());
+  .catch((e) => {
+    console.error('❌ Seed failed:', e);
+    process.exit(1);
+  })
+  .finally(async () => {
+    await prisma.$disconnect();
+    await pool.end();
+  });

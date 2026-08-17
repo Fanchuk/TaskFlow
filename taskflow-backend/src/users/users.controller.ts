@@ -8,7 +8,6 @@ import { UsersService } from './users.service';
 export class UsersController {
   constructor(private users: UsersService) {}
 
-  @UseGuards(AdminGuard)
   @Get()
   findAll() {
     return this.users.findAll();
