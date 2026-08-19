@@ -9,7 +9,7 @@ async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule, { rawBody: true });
 
   app.enableCors({
-    origin: ['https://твоя-назва-на-vercel.vercel.app', 'http://localhost:5173'],
+    origin: ['https://task-flow-bay-nu.vercel.app', 'http://localhost:5173'],
     credentials: true,
   });
 
