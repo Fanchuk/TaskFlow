@@ -1,0 +1,161 @@
+:root {
+    --bg: #060913;
+    --bg-2: #0a0e1c;
+    --surface: rgba(255, 255, 255, 0.03);
+    --surface-2: rgba(255, 255, 255, 0.05);
+    --border: rgba(255, 255, 255, 0.08);
+    --border-glow: rgba(59, 130, 246, 0.35);
+
+    --blue: #3b82f6;
+    --cyan: #22d3ee;
+    --orange: #ff6b35;
+    --violet: #8b5cf6;
+
+    --text: #eaf0ff;
+    --text-dim: rgba(234, 240, 255, 0.62);
+    --text-faint: rgba(234, 240, 255, 0.38);
+
+    --grad-neon: linear-gradient(120deg, #22d3ee 0%, #3b82f6 45%, #8b5cf6 100%);
+    --grad-fire: linear-gradient(120deg, #22d3ee 0%, #3b82f6 40%, #ff6b35 100%);
+    --grad-text: linear-gradient(100deg, #67e8f9, #60a5fa 50%, #ff8a5c);
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Space Grotesk', 'Inter', system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+}
+
+.tf-bg {
+    position: fixed;
+    inset: 0;
+    z-index: -2;
+    background:
+        radial-gradient(60vw 60vw at 15% 10%, rgba(59, 130, 246, 0.18), transparent 60%), radial-gradient(50vw 50vw at 85% 20%, rgba(34, 211, 238, 0.14), transparent 60%),
+        radial-gradient(55vw 55vw at 70% 90%, rgba(255, 107, 53, 0.12), transparent 60%), radial-gradient(45vw 45vw at 20% 85%, rgba(139, 92, 246, 0.14), transparent 60%), var(--bg);
+}
+
+.tf-grid {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    background-image: linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+    background-size: 64px 64px;
+    opacity: 0.5;
+}
+
+.tf-gradient-text {
+    background: var(--grad-text);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+.tf-glass {
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid var(--border);
+}
+
+.tf-card {
+    position: relative;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.015));
+    border: 1px solid var(--border);
+    border-radius: 24px;
+    overflow: hidden;
+    transition: border-color 0.3s ease;
+}
+
+/* легка рамка на hover замість дорогої mask-composite */
+.tf-card:hover {
+    border-color: rgba(59, 130, 246, 0.4);
+}
+
+.tf-focus:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.5);
+}
+
+@keyframes tf-pulse-glow {
+    0%,
+    100% {
+        opacity: 0.5;
+    }
+    50% {
+        opacity: 0.9;
+    }
+}
+
+@keyframes tf-shimmer {
+    0% {
+        background-position: -200% 0;
+    }
+    100% {
+        background-position: 200% 0;
+    }
+}
+
+.tf-glow {
+    animation: tf-pulse-glow 5s ease-in-out infinite;
+}
+
+.tf-orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    pointer-events: none;
+    transform: translateZ(0);
+    contain: strict;
+}
+
+.tf-shimmer {
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.12), transparent);
+    background-size: 200% 100%;
+    animation: tf-shimmer 2.4s linear infinite;
+}
+
+.tf-neon-btn {
+    position: relative;
+    box-shadow: 0 0 0 rgba(59, 130, 246, 0);
+    transition: box-shadow 0.3s ease;
+}
+
+.tf-neon-btn:hover {
+    box-shadow:
+        0 8px 40px -8px rgba(59, 130, 246, 0.7),
+        0 0 20px rgba(34, 211, 238, 0.35);
+}
+
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 8px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.25);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.001ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.001ms !important;
+        scroll-behavior: auto !important;
+    }
+}

@@ -5,7 +5,7 @@ export function useCta() {
     const navigate = useNavigate()
     const isAuth = useAuthStore((s) => s.isAuthenticated)
 
-    const goStart = () => navigate(isAuth ? '/dashbpard' : '/register')
+    const goStart = () => navigate(isAuth ? '/dashboard' : '/register')
 
     const goBuy = (plan: string, billing?: string) => {
         const query = billing ? `plan=${plan}&billing=${billing}` : `plan=${plan}`

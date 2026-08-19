@@ -8,6 +8,7 @@ import { authService } from '../services/auth.service';
 import { useAuthStore } from '../stores/authStore';
 import Button from '../components/ui/Button';
 import Spinner from '../components/ui/Spinner';
+import { AuthAside } from '../components/auth/AuthAside';
 
 const schema = z.object({
   fullName: z.string().min(2, 'Enter your name'),
@@ -16,12 +17,14 @@ const schema = z.object({
 });
 type FormData = z.infer<typeof schema>;
 
-const inputCls = 'w-full rounded-xl border border-black/10 px-4 py-3 outline-none focus:border-[#975bec] focus:ring-4 focus:ring-[#975bec]/20 transition';
+const inputCls =
+  'w-full rounded-xl border border-white/10 bg-white/[0.03] px-4 py-3 text-white placeholder-white/35 outline-none ' +
+  'focus:border-[#3b82f6]/60 focus:ring-4 focus:ring-[#3b82f6]/20 transition';
 
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <div>
-      <label className="mb-1.5 block text-sm font-medium text-black/80">{label}</label>
+      <label className="mb-1.5 block text-sm font-medium text-white/70">{label}</label>
       {children}
     </div>
   );
@@ -50,33 +53,40 @@ export default function Register() {
   };
 
   return (
-    <div className="flex min-h-[80vh] items-center justify-center px-4 py-12">
+    <div className="mx-auto flex min-h-[86vh] max-w-[1100px] items-center px-4 py-12">
       <motion.div
         initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}
-        className="w-full max-w-md rounded-[24px] border border-black/[0.06] bg-white p-8 shadow-[0_20px_50px_rgba(0,0,0,0.08)] md:p-10"
+        className="tf-card grid w-full overflow-hidden lg:grid-cols-2"
       >
-        <h1 className="font-serif text-3xl font-bold text-black">Create your account</h1>
-        <p className="mt-2 text-black/60">
-          {plan ? `You're signing up for the ${plan} plan.` : 'Start managing your team in minutes.'}
-        </p>
-        <form onSubmit={handleSubmit(onSubmit, onError)} className="mt-8 space-y-5">
-          <Field label="Full name">
-            <input {...register('fullName')} placeholder="Jane Cooper" className={inputCls} />
-          </Field>
-          <Field label="Email">
-            <input {...register('email')} type="email" placeholder="jane@work.com" className={inputCls} />
-          </Field>
-          <Field label="Password">
-            <input {...register('password')} type="password" placeholder="••••••••" className={inputCls} />
-          </Field>
-          <Button type="submit" variant="purpleSolid" className="w-full" disabled={isSubmitting}>
-            {isSubmitting ? <Spinner /> : 'Create account'}
-          </Button>
-        </form>
-        <p className="mt-6 text-center text-black/60">
-          Already have an account?{' '}
-          <Link to="/login" className="font-semibold text-[#975bec] hover:underline">Log in</Link>
-        </p>
+        <AuthAside
+          title="Start managing your team in minutes."
+          points={['Unlimited projects & clients', 'Real-time collaboration', '14-day free trial, no card']}
+        />
+
+        <div className="p-8 md:p-11">
+          <h1 className="text-3xl font-bold text-white">Create your account</h1>
+          <p className="mt-2 text-white/55">
+            {plan ? `You're signing up for the ${plan} plan.` : 'Get started free — no card required.'}
+          </p>
+          <form onSubmit={handleSubmit(onSubmit, onError)} className="mt-8 space-y-5">
+            <Field label="Full name">
+              <input {...register('fullName')} placeholder="Jane Cooper" className={inputCls} />
+            </Field>
+            <Field label="Email">
+              <input {...register('email')} type="email" placeholder="jane@work.com" className={inputCls} />
+            </Field>
+            <Field label="Password">
+              <input {...register('password')} type="password" placeholder="••••••••" className={inputCls} />
+            </Field>
+            <Button type="submit" variant="purpleSolid" className="w-full" disabled={isSubmitting}>
+              {isSubmitting ? <Spinner /> : 'Create account'}
+            </Button>
+          </form>
+          <p className="mt-6 text-center text-white/55">
+            Already have an account?{' '}
+            <Link to="/login" className="font-semibold tf-gradient-text hover:underline">Log in</Link>
+          </p>
+        </div>
       </motion.div>
     </div>
   );

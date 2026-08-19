@@ -3,61 +3,76 @@ import { container, scaleIn } from '../../hooks/useScrollReveal';
 
 const FEATURES = [
   {
-    title: "Task Prograss",
-    desc: "Send scheduling links guests love",
-    img: "/Frame 210.png",
-    bg: "bg-[#fffde7]",
-    back: "bg-[#fffde7]",
-    rotate: "-rotate-[4deg]"
+    title: 'Task progress',
+    desc: 'Visual boards and live status so nothing slips through the cracks.',
+    hue: '#22d3ee',
+    icon: (
+      <path d="M4 12h6M4 6h10M4 18h8M16 15l2 2 4-4" strokeLinecap="round" strokeLinejoin="round" />
+    ),
   },
   {
-    title: "Plan Calendar",
-    desc: "Send scheduling links guests love",
-    img: "/Frame 209.png",
-    bg: "bg-[#f4effd]",
-    back: "bg-black",
-    rotate: "rotate-[5deg]"
+    title: 'Plan calendar',
+    desc: 'Drag, drop and schedule work across weeks without the mess.',
+    hue: '#3b82f6',
+    icon: (
+      <path d="M3 8h18M7 3v4M17 3v4M5 5h14a1 1 0 011 1v13a1 1 0 01-1 1H5a1 1 0 01-1-1V6a1 1 0 011-1z" strokeLinecap="round" strokeLinejoin="round" />
+    ),
   },
   {
-    title: "Collaborations",
-    desc: "Send scheduling links guests love",
-    img: "/Frame 211.png",
-    bg: "bg-[#ebf5ff]",
-    back: "bg-[#ebf5ff]",
-    rotate: "-rotate-[4deg]"
+    title: 'Collaboration',
+    desc: 'Comment, mention and share files in one central place.',
+    hue: '#ff6b35',
+    icon: (
+      <path d="M17 20a5 5 0 00-10 0M12 12a4 4 0 100-8 4 4 0 000 8zM20 8v6M23 11h-6" strokeLinecap="round" strokeLinejoin="round" />
+    ),
   },
 ];
 
 export default function Features() {
   return (
-    <section className="mx-auto max-w-[1400px] px-4 py-16 md:py-24">
+    <section className="mx-auto max-w-[1200px] px-4 py-16 md:py-24">
       <motion.div initial="hidden" whileInView="show" viewport={{ once: true, margin: '-80px' }} variants={container}>
-        <motion.img variants={scaleIn} src="/Group 221.svg" alt="Features" className="mx-auto mb-4 h-6 w-auto" />
-        <motion.h2 variants={scaleIn} className="text-center text-3xl md:text-[44px] font-extrabold leading-tight text-black">
-          The features<br />Both familiar and new.
+        <motion.p variants={scaleIn} className="text-center text-sm uppercase tracking-[0.2em] text-[#22d3ee]">
+          Features
+        </motion.p>
+        <motion.h2 variants={scaleIn} className="mt-3 text-center text-3xl md:text-[44px] font-bold leading-tight">
+          Both familiar <span className="tf-gradient-text">and new.</span>
         </motion.h2>
       </motion.div>
 
       <motion.div
-        className="mt-16 grid gap-10 md:mt-24 md:grid-cols-3 md:gap-6 lg:gap-8"
-        initial="hidden" whileInView="show" viewport={{ once: true, margin: '-60px' }} variants={container}>
+        className="mt-14 grid gap-6 md:grid-cols-3"
+        initial="hidden" whileInView="show" viewport={{ once: true, margin: '-60px' }} variants={container}
+      >
         {FEATURES.map((f) => (
           <motion.div
             key={f.title}
             variants={scaleIn}
-            whileHover={{ y: -8, transition: { duration: 0.3 } }}
-            className="relative mx-auto w-full max-w-[420px] md:max-w-none"
+            className="tf-card group p-7 md:p-8 transition-transform duration-300 hover:-translate-y-2"
           >
-            <div className={`absolute inset-0 rounded-[36px] ${f.back} ${f.rotate} opacity-90`} aria-hidden />
-            <div className={`relative flex h-full flex-col overflow-hidden rounded-[36px] ${f.bg} px-7 pt-9 pb-0 md:px-8 md:pt-10`}>
-              <div className="flex items-center gap-3">
-                <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full border-[3px] border-[#e8582c]" />
-                <h3 className="text-[26px] font-extrabold leading-tight text-black md:text-[28px]">{f.title}</h3>
-              </div>
-              <p className="mt-3 text-[17px] font-medium leading-relaxed text-black/70">{f.desc}</p>
-              <div className="mt-8 flex-1">
-                <img src={f.img} alt={f.title} className="w-full object-contain drop-shadow-[0_15px_25px_rgba(0,0,0,0.05)]" />
-              </div>
+            <div
+              className="grid h-14 w-14 place-items-center rounded-2xl"
+              style={{ background: `radial-gradient(circle, ${f.hue}33, transparent 70%)` }}
+            >
+              <motion.svg
+                viewBox="0 0 24 24" className="h-7 w-7" fill="none" strokeWidth="2"
+                style={{ color: f.hue }}
+                whileHover={{ rotate: 8 }}
+              >
+                {f.icon}
+              </motion.svg>
+            </div>
+            <h3 className="mt-6 text-xl font-bold text-white">{f.title}</h3>
+            <p className="mt-2.5 text-white/55">{f.desc}</p>
+            <div className="mt-6 h-1 w-full overflow-hidden rounded-full bg-white/8">
+              <motion.div
+                className="h-full rounded-full"
+                style={{ background: `linear-gradient(90deg, ${f.hue}, transparent)` }}
+                initial={{ width: '15%' }}
+                whileInView={{ width: '70%' }}
+                viewport={{ once: true }}
+                transition={{ duration: 1.2, ease: 'easeOut' }}
+              />
             </div>
           </motion.div>
         ))}

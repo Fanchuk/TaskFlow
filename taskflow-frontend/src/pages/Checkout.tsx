@@ -26,8 +26,8 @@ export default function Checkout() {
   const handlePay = async () => {
     setPaying(true);
     try {
-        const { data } = await api.post('/payments/checkout', { plan: planKey })
-        window.location.href = data.url
+      const { data } = await api.post('/payments/checkout', { plan: planKey });
+      window.location.href = data.url;
     } catch {
       toast.error('Payment failed. Try again.');
     } finally {
@@ -39,23 +39,28 @@ export default function Checkout() {
     <div className="flex min-h-[80vh] items-center justify-center px-4 py-12">
       <motion.div
         initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}
-        className="w-full max-w-lg rounded-[24px] border border-black/[0.06] bg-white p-8 shadow-[0_20px_50px_rgba(0,0,0,0.08)] md:p-10"
+        className="tf-card w-full max-w-lg p-8 md:p-10"
       >
-        <span className="text-sm font-semibold uppercase tracking-wide text-[#975bec]">Checkout</span>
-        <h1 className="mt-2 font-serif text-3xl font-bold text-black">{plan.name} plan</h1>
-        <div className="mt-8 flex items-baseline justify-between rounded-2xl bg-[#f4effd] px-6 py-5">
-          <span className="text-black/70">Billed monthly</span>
-          <span className="text-3xl font-extrabold text-black">{plan.price}</span>
+        <span className="text-sm font-semibold uppercase tracking-[0.2em] text-[#22d3ee]">Checkout</span>
+        <h1 className="mt-2 text-3xl font-bold text-white">{plan.name} plan</h1>
+        <div className="mt-8 flex items-baseline justify-between rounded-2xl border border-white/8 bg-white/[0.03] px-6 py-5">
+          <span className="text-white/60">Billed monthly</span>
+          <span className="text-3xl font-bold tf-gradient-text">{plan.price}</span>
         </div>
-        <ul className="mt-6 space-y-3 text-black/70">
-          <li>✓ 14-day free trial</li>
-          <li>✓ Cancel anytime</li>
-          <li>✓ No card required for trial</li>
+        <ul className="mt-6 space-y-3 text-white/60">
+          {['14-day free trial', 'Cancel anytime', 'No card required for trial'].map((t) => (
+            <li key={t} className="flex items-center gap-3">
+              <svg viewBox="0 0 24 24" className="h-5 w-5 text-[#22d3ee]" fill="none" stroke="currentColor" strokeWidth="2.5">
+                <path d="M5 13l4 4L19 7" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+              {t}
+            </li>
+          ))}
         </ul>
         <Button variant="purpleSolid" className="mt-8 w-full" onClick={handlePay} disabled={paying}>
           {paying ? <Spinner /> : 'Start free trial'}
         </Button>
-        <button onClick={() => navigate('/')} className="mt-3 w-full rounded-full py-2.5 font-semibold text-black/50 hover:bg-black/5">
+        <button onClick={() => navigate('/')} className="mt-3 w-full rounded-full py-2.5 font-semibold text-white/40 hover:bg-white/5 transition">
           Back to home
         </button>
       </motion.div>

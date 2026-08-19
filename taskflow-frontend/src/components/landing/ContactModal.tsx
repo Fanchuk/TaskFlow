@@ -1,44 +1,38 @@
 import { useState } from 'react';
-import toast from 'react-hot-toast';
 import Modal from '../ui/Modal';
 import Button from '../ui/Button';
-import Spinner from '../ui/Spinner';
 
 export function ContactModal({ open, onClose }: { open: boolean; onClose: () => void }) {
-  const [sending, setSending] = useState(false);
+  const [sent, setSent] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    setSending(true);
-    setTimeout(() => {
-      setSending(false);
-      onClose();
-      toast.success("Thanks! We'll get back to you shortly.");
-    }, 800);
-  };
+  const inputCls =
+    'w-full rounded-xl border border-white/10 bg-white/[0.03] px-4 py-3 text-white placeholder-white/35 outline-none focus:border-[#3b82f6]/60 focus:ring-4 focus:ring-[#3b82f6]/20 transition';
 
   return (
-    <Modal open={open} onClose={onClose}>
-      <h3 className="text-2xl font-bold text-black">Contact sales</h3>
-      <p className="mt-2 text-black/60">Tell us about your team and we'll reach out.</p>
-      <form onSubmit={handleSubmit} className="mt-6 space-y-4">
-        <input
-          required type="email" placeholder="Work email"
-          className="w-full rounded-xl border border-black/10 px-4 py-3 outline-none focus:border-[#975bec] focus:ring-4 focus:ring-[#975bec]/20"
-        />
-        <textarea
-          required rows={3} placeholder="How can we help?"
-          className="w-full resize-none rounded-xl border border-black/10 px-4 py-3 outline-none focus:border-[#975bec] focus:ring-4 focus:ring-[#975bec]/20"
-        />
-        <div className="flex justify-end gap-3">
-          <button type="button" onClick={onClose} className="rounded-full px-5 py-2.5 font-semibold text-black/60 hover:bg-black/5">
-            Cancel
-          </button>
-          <Button type="submit" variant="purpleSolid" disabled={sending}>
-            {sending ? <Spinner /> : 'Send message'}
-          </Button>
+    <Modal open={open} onClose={() => { setSent(false); onClose(); }}>
+      {sent ? (
+        <div className="text-center">
+          <div className="mx-auto grid h-14 w-14 place-items-center rounded-2xl [background:linear-gradient(135deg,#22d3ee,#3b82f6)]">
+            <svg viewBox="0 0 24 24" className="h-7 w-7 text-white" fill="none" stroke="currentColor" strokeWidth="2.5">
+              <path d="M5 13l4 4L19 7" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          </div>
+          <h3 className="mt-5 text-2xl font-bold text-white">Thanks — we'll be in touch</h3>
+          <p className="mt-2 text-white/55">Our team will reach out within one business day.</p>
+          <Button variant="purpleSolid" className="mt-6 w-full" onClick={() => { setSent(false); onClose(); }}>Done</Button>
         </div>
-      </form>
+      ) : (
+        <>
+          <h3 className="text-2xl font-bold text-white">Talk to sales</h3>
+          <p className="mt-2 text-white/55">Tell us about your team and we'll tailor a plan.</p>
+          <form className="mt-6 space-y-4" onSubmit={(e) => { e.preventDefault(); setSent(true); }}>
+            <input required placeholder="Work email" type="email" className={inputCls} />
+            <input required placeholder="Company" className={inputCls} />
+            <textarea placeholder="What are you looking for?" rows={3} className={inputCls} />
+            <Button type="submit" variant="purpleSolid" className="w-full">Send message</Button>
+          </form>
+        </>
+      )}
     </Modal>
   );
 }

@@ -1,66 +1,70 @@
-import Button from "../ui/Button";
+import { useState } from 'react';
+import Button from '../ui/Button';
 import { Reveal } from '../motion/Reveal';
+import { DashboardMock } from '../motion/Decor';
+import { VideoModal } from './VideoModal';
 import { useCta } from '../../hooks/useCta';
-import { motion } from 'motion/react';
+
+const STATS = [
+  { k: '12k+', v: 'Active teams' },
+  { k: '99.9%', v: 'Uptime' },
+  { k: '4.9', v: 'Avg rating' },
+];
 
 export default function Hero() {
   const { goStart } = useCta();
+  const [demo, setDemo] = useState(false);
 
   return (
-    <section className="relative w-full overflow-x-clip pt-12 pb-24 md:pt-20">
-      <motion.div
-        animate={{ y: [0, -18, 0], rotate: [11, 13, 11] }}
-        transition={{ duration: 7, repeat: Infinity, ease: 'easeInOut' }}
-        className="pointer-events-none absolute -left-4 top-72 hidden w-[230px] lg:block xl:w-[290px]"
-      >
-        <img src="/Frame 80 (1).png" alt="" className="w-full object-contain drop-shadow-[0_25px_35px_rgba(0,0,0,0.10)]" />
-      </motion.div>
+    <section className="relative mx-auto max-w-[1200px] px-4 pt-16 pb-24 md:pt-24 text-center">
+      <Reveal>
+        <span className="tf-glass inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-sm text-white/80">
+          <span className="h-2 w-2 rounded-full bg-[#22d3ee] shadow-[0_0_10px_#22d3ee] tf-glow" />
+          New — real-time collaboration is live
+        </span>
+      </Reveal>
 
-      <motion.div
-        animate={{ y: [0, -22, 0], rotate: [-15, -13, -15] }}
-        transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }}
-        className="pointer-events-none absolute -right-4 top-56 hidden w-[190px] lg:block xl:w-[230px]"
-      >
-        <img src="/Frame 78 (1).png" alt="" className="w-full object-contain drop-shadow-[0_25px_35px_rgba(0,0,0,0.10)]" />
-      </motion.div>
+      <Reveal delay={0.05}>
+        <h1 className="mx-auto mt-7 max-w-4xl text-4xl font-bold leading-[1.05] tracking-tight sm:text-6xl md:text-[80px]">
+          Manage your team,
+          <br />
+          <span className="tf-gradient-text">ship without chaos.</span>
+        </h1>
+      </Reveal>
 
-      <div className="relative z-10 mx-auto max-w-[1440px] px-4">
-        <Reveal>
-          <div className="mx-auto max-w-4xl text-center">
-            <h1 className="flex flex-wrap items-center justify-center gap-x-3 sm:gap-x-5 font-sans text-4xl font-bold leading-[1.1] tracking-tight text-black sm:text-6xl md:text-[81px] min-w-0">
-              <span>Manage Your</span>
-              <img src="/Group 201.png" alt="team" className="inline-block h-12 w-auto md:h-16" />
-              <span>Team's</span>
-            </h1>
-            <div className="mt-8 flex justify-center">
-              <motion.img
-                animate={{ scale: [1, 1.02, 1] }}
-                transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
-                src="/Group 200 (1).png" alt="Productivity"
-                className="h-[90px] w-auto md:h-[130px] object-contain"
-              />
-            </div>
-            <p className="mx-auto mt-8 max-w-lg text-base font-medium text-black/75 md:text-lg">
-              Plan projects, stay on track, and deliver on time without overworking your team.
-            </p>
-            <div className="mt-8 flex justify-center">
-              <Button variant="purpleSolid" icon onClick={goStart}>Try Now - Free!</Button>
-            </div>
-            <div className="mt-6 flex items-center justify-center gap-2 text-black/80">
-              <img src="/Frame 214.svg" alt="" className="h-5 w-5" />
-              <span className="text-[15px]">Excellent 4.9 out of 5</span>
-              <img src="/image 66.svg" alt="sitejabber" className="h-5 w-auto" />
-            </div>
-          </div>
-        </Reveal>
+      <Reveal delay={0.1}>
+        <p className="mx-auto mt-6 max-w-xl text-base text-white/60 md:text-lg">
+          Plan projects, track progress, and deliver on time — all in one calm,
+          fast workspace built for teams that move.
+        </p>
+      </Reveal>
 
-        <Reveal delay={0.2}>
-          <div className="relative z-10 mx-auto mt-16 max-w-[1257px] md:mt-28">
-            <div className="absolute -bottom-8 -left-4 -right-6 top-8 -rotate-[4deg] rounded-[32px] bg-[#7562f3] md:-bottom-16 md:-left-8 md:-right-12 md:top-12 md:rounded-[48px]" aria-hidden />
-            <img src="/Container.jpg" alt="TaskFlow dashboard" className="relative w-full rounded-[20px] object-cover shadow-[0_20px_50px_rgba(0,0,0,0.10)] md:rounded-[24px]" />
-          </div>
-        </Reveal>
-      </div>
+      <Reveal delay={0.15}>
+        <div className="mt-9 flex flex-wrap items-center justify-center gap-3">
+          <Button variant="purpleSolid" icon onClick={goStart}>Try now — free</Button>
+          <Button variant="purpleOutline" onClick={() => setDemo(true)}>Watch demo</Button>
+        </div>
+      </Reveal>
+
+      <Reveal delay={0.2}>
+        <div className="mt-8 flex flex-wrap items-center justify-center gap-8">
+          {STATS.map((s) => (
+            <div key={s.v} className="text-center">
+              <div className="text-2xl font-bold tf-gradient-text md:text-3xl">{s.k}</div>
+              <div className="text-xs text-white/45">{s.v}</div>
+            </div>
+          ))}
+        </div>
+      </Reveal>
+
+      <Reveal delay={0.25}>
+        <div className="relative mx-auto mt-16 max-w-[980px]">
+          <div className="pointer-events-none absolute -inset-6 -z-10 rounded-[40px] [background:radial-gradient(ellipse_at_center,rgba(59,130,246,0.35),transparent_70%)] blur-2xl" />
+          <DashboardMock />
+        </div>
+      </Reveal>
+
+      <VideoModal open={demo} onClose={() => setDemo(false)} />
     </section>
   );
 }

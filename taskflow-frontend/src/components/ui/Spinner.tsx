@@ -1,9 +1,9 @@
 import { useEffect } from 'react';
 
 export default function Spinner({
-  size = 40,
-  stroke = 4,
-  color = '#975bec',
+  size = 34,
+  stroke = 3.5,
+  color = '#22d3ee',
 }: {
   size?: number;
   stroke?: number;
@@ -13,7 +13,5 @@ export default function Spinner({
     import('ldrs').then(({ ring }) => ring.register());
   }, []);
 
-  return (
-    <l-ring size={size} stroke={stroke} bg-opacity="0" speed="2" color={color} />
-  );
+  return <l-ring size={size} stroke={stroke} bg-opacity="0" speed="2" color={color} />;
 }

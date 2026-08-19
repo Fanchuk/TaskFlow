@@ -1,35 +1,38 @@
 import { motion } from 'motion/react';
-import { container, fadeUp } from '../../hooks/useScrollReveal';
 
-const LOGOS = [
-  { name: "Notion", src: "/Group 232.svg" },
-  { name: "Calendar", src: "/Group 233.svg" },
-  { name: "Trello", src: "/trello-logo 1.svg" },
-  { name: "Slack", src: "/Group 230.svg" },
-  { name: "Outlook", src: "/Group 231.svg" },
-];
+const LOGOS = ['Notion', 'Slack', 'Trello', 'Outlook', 'Calendar', 'Figma', 'GitHub', 'Zoom'];
+
+function Chip({ name }: { name: string }) {
+  return (
+    <div className="tf-glass flex shrink-0 items-center gap-2.5 rounded-full px-5 py-2.5">
+      <span className="h-2.5 w-2.5 rounded-full [background:linear-gradient(135deg,#22d3ee,#8b5cf6)]" />
+      <span className="text-sm font-medium text-white/70">{name}</span>
+    </div>
+  );
+}
 
 export default function Integrations() {
+  const row = [...LOGOS, ...LOGOS];
   return (
-    <section className="mx-auto max-w-[1322px] px-4 py-12 md:py-16">
-      <p className="text-center text-black/50 mb-8">
-        Our native plants are listed below integrations
+    <section id="integrations" className="mx-auto max-w-[1322px] px-4 py-14">
+      <p className="mb-8 text-center text-sm uppercase tracking-[0.2em] text-white/40">
+        Works with your favorite tools
       </p>
-      <motion.div
-        className="flex flex-wrap items-center justify-center gap-x-10 gap-y-6 md:gap-x-16"
-        initial="hidden" whileInView="show" viewport={{ once: true }} variants={container}
+      <div
+        className="relative overflow-hidden"
+        style={{
+          maskImage: 'linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent)',
+          WebkitMaskImage: 'linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent)',
+        }}
       >
-        {LOGOS.map((l) => (
-          <motion.img
-            key={l.name}
-            variants={fadeUp}
-            whileHover={{ scale: 1.1, opacity: 1 }}
-            src={l.src}
-            alt={l.name}
-            className="h-6 md:h-7 w-auto object-contain opacity-70 grayscale transition hover:grayscale-0"
-          />
-        ))}
-      </motion.div>
+        <motion.div
+          className="flex w-max gap-4"
+          animate={{ x: ['0%', '-50%'] }}
+          transition={{ duration: 24, repeat: Infinity, ease: 'linear' }}
+        >
+          {row.map((l, i) => <Chip key={i} name={l} />)}
+        </motion.div>
+      </div>
     </section>
   );
 }

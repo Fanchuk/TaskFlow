@@ -8,6 +8,7 @@ import { authService } from '../services/auth.service';
 import { useAuthStore } from '../stores/authStore';
 import Button from '../components/ui/Button';
 import Spinner from '../components/ui/Spinner';
+import { AuthAside } from '../components/auth/AuthAside';
 
 const schema = z.object({
   email: z.string().email('Enter a valid email'),
@@ -15,7 +16,9 @@ const schema = z.object({
 });
 type FormData = z.infer<typeof schema>;
 
-const inputCls = 'w-full rounded-xl border border-black/10 px-4 py-3 outline-none focus:border-[#975bec] focus:ring-4 focus:ring-[#975bec]/20 transition';
+const inputCls =
+  'w-full rounded-xl border border-white/10 bg-white/[0.03] px-4 py-3 text-white placeholder-white/35 outline-none ' +
+  'focus:border-[#3b82f6]/60 focus:ring-4 focus:ring-[#3b82f6]/20 transition';
 
 export default function Login() {
   const navigate = useNavigate();
@@ -38,30 +41,37 @@ export default function Login() {
   };
 
   return (
-    <div className="flex min-h-[80vh] items-center justify-center px-4 py-12">
+    <div className="mx-auto flex min-h-[86vh] max-w-[1100px] items-center px-4 py-12">
       <motion.div
         initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}
-        className="w-full max-w-md rounded-[24px] border border-black/[0.06] bg-white p-8 shadow-[0_20px_50px_rgba(0,0,0,0.08)] md:p-10"
+        className="tf-card grid w-full overflow-hidden lg:grid-cols-2"
       >
-        <h1 className="font-serif text-3xl font-bold text-black">Welcome back</h1>
-        <p className="mt-2 text-black/60">Log in to your TaskFlow account.</p>
-        <form onSubmit={handleSubmit(onSubmit, onError)} className="mt-8 space-y-5">
-          <div>
-            <label className="mb-1.5 block text-sm font-medium text-black/80">Email</label>
-            <input {...register('email')} type="email" placeholder="jane@work.com" className={inputCls} />
-          </div>
-          <div>
-            <label className="mb-1.5 block text-sm font-medium text-black/80">Password</label>
-            <input {...register('password')} type="password" placeholder="••••••••" className={inputCls} />
-          </div>
-          <Button type="submit" variant="purpleSolid" className="w-full" disabled={isSubmitting}>
-            {isSubmitting ? <Spinner /> : 'Log in'}
-          </Button>
-        </form>
-        <p className="mt-6 text-center text-black/60">
-          No account?{' '}
-          <Link to="/register" className="font-semibold text-[#975bec] hover:underline">Sign up</Link>
-        </p>
+        <AuthAside
+          title="Welcome back to your workspace."
+          points={['Pick up right where you left off', 'All your projects in sync', 'Trusted by 12k+ teams']}
+        />
+
+        <div className="p-8 md:p-11">
+          <h1 className="text-3xl font-bold text-white">Welcome back</h1>
+          <p className="mt-2 text-white/55">Log in to your TaskFlow account.</p>
+          <form onSubmit={handleSubmit(onSubmit, onError)} className="mt-8 space-y-5">
+            <div>
+              <label className="mb-1.5 block text-sm font-medium text-white/70">Email</label>
+              <input {...register('email')} type="email" placeholder="jane@work.com" className={inputCls} />
+            </div>
+            <div>
+              <label className="mb-1.5 block text-sm font-medium text-white/70">Password</label>
+              <input {...register('password')} type="password" placeholder="••••••••" className={inputCls} />
+            </div>
+            <Button type="submit" variant="purpleSolid" className="w-full" disabled={isSubmitting}>
+              {isSubmitting ? <Spinner /> : 'Log in'}
+            </Button>
+          </form>
+          <p className="mt-6 text-center text-white/55">
+            No account?{' '}
+            <Link to="/register" className="font-semibold tf-gradient-text hover:underline">Sign up</Link>
+          </p>
+        </div>
       </motion.div>
     </div>
   );
