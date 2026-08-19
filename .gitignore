@@ -1,5 +1,81 @@
-node_modules
-# Keep environment variables out of version control
-.env
+# =========================
+# Залежності (Dependencies)
+# =========================
+node_modules/
+.pnp
+.pnp.js
 
+# =========================
+# Збірка (Build outputs)
+# =========================
+dist/
+build/
+*.tsbuildinfo
+
+# =========================
+# Змінні оточення (Environment variables)
+# =========================
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# =========================
+# Логи (Logs)
+# =========================
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+
+# =========================
+# Prisma та Бази даних
+# =========================
 /generated/prisma
+*.db
+*.sqlite
+
+# =========================
+# Користувацькі файли (Uploads)
+# =========================
+/uploads
+uploads/
+
+# =========================
+# Тестування (Testing)
+# =========================
+coverage/
+.nyc_output
+
+# =========================
+# Кеш (Caches)
+# =========================
+.npm
+.eslintcache
+.stylelintcache
+.swc
+
+# =========================
+# Операційні системи (OS specific)
+# =========================
+.DS_Store
+.AppleDouble
+.LSOverride
+Thumbs.db
+ehthumbs.db
+$RECYCLE.BIN/
+
+# =========================
+# Редактори та IDE (Editors/IDEs)
+# =========================
+.vscode/*
+!.vscode/extensions.json
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?

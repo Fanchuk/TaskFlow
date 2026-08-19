@@ -1,122 +1,127 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import heroImg from './assets/hero.png'
-import './App.css'
+import React from 'react';
+import { BrowserRouter, Routes, Route, useLocation, Navigate } from 'react-router-dom';
+import { Toaster } from 'react-hot-toast';
 
-function App() {
-  const [count, setCount] = useState(0)
+// Layouts
+import Header from './components/layout/Header';
+import Footer from './components/layout/Footer';
+import AppLayout from './components/layout/AppLayout';
+import RequireAuth from './components/RequireAuth';
+
+// Public Pages
+import Landing from './pages/Landing';
+import Download from './pages/Download';
+import Register from './pages/Register';
+import Login from './pages/Login';
+import Checkout from './pages/Checkout';
+import NotFound from './pages/NotFound';
+
+// Protected Pages
+import DashboardPage from './pages/DashboardPage';
+import NewProject from './pages/NewProject';
+import ProjectsListPage from './pages/ProjectsListPage';
+import ProjectLayout from './pages/Projects';
+import TeamPage from './pages/TeamPage';
+import SettingsPage from './pages/SettingsPage';
+import FilesPage from './pages/FilesPage';
+import AllFilesPage from './pages/AllFilesPage';
+import FolderPage from './pages/FolderPage';
+import StarredPage from './pages/StarredPage';
+import TrashPage from './pages/TrashPage';
+import FileStatsPage from './pages/FileStatsPage';
+import MyTasksPage from './pages/MyTasksPage';
+import AnalyticsPage from './pages/AnalyticsPage';
+import AiTasksPage from './pages/AiTasksPage';
+
+// Project Views
+import OverviewView from './components/project/OverviewView';
+import KanbanView from './components/project/KanbanView';
+import ListView from './components/project/ListView';
+import CalendarView from './components/project/CalendarView';
+import TimelineView from './components/project/TimelineView';
+import TaskDrawer from './components/project/TaskDrawer';
+
+// Маршрути, де не потрібні публічні Header та Footer (landing-каркас)
+const HIDDEN_CHROME = [
+  '/login',
+  '/register',
+  '/checkout',
+  '/dashboard',
+  '/projects',
+  '/team',
+  '/settings',
+  '/files',
+  '/tasks',
+  '/analytics'
+];
+
+function Shell({ children }: { children: React.ReactNode }) {
+  const { pathname } = useLocation();
+  const bare = HIDDEN_CHROME.some((p) => pathname.startsWith(p));
 
   return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.tsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
-
-      <div className="ticks"></div>
-
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
-
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
-  )
+    <div className="min-h-screen bg-white font-sans text-black">
+      {!bare && <Header />}
+      <main>{children}</main>
+      {!bare && <Footer />}
+    </div>
+  );
 }
 
-export default App
+export default function App() {
+  return (
+    <BrowserRouter>
+      <Shell>
+        <Routes>
+          {/* Public Routes */}
+          <Route path="/" element={<Landing />} />
+          <Route path="/download" element={<Download />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/checkout" element={<Checkout />} />
+
+          {/* Protected Routes (Wrapped in AppLayout) */}
+          <Route element={<RequireAuth><AppLayout /></RequireAuth>}>
+            <Route path="/dashboard" element={<DashboardPage />} />
+            
+            {/* Projects */}
+            <Route path="/projects/new" element={<NewProject />} />
+            <Route path="/projects" element={<ProjectsListPage />} />
+            <Route path="/projects/:id" element={<ProjectLayout />}>
+              <Route index element={<Navigate to="kanban" replace />} />
+              <Route path="overview" element={<OverviewView />} />
+              <Route path="kanban" element={<KanbanView />}>
+                <Route path="tasks/:taskId" element={<TaskDrawer />} />
+              </Route>
+              <Route path="list" element={<ListView />} />
+              <Route path="calendar" element={<CalendarView />} />
+              <Route path="timeline" element={<TimelineView />} />
+              <Route path="ai-tasks" element={<AiTasksPage />} />
+            </Route>
+
+            {/* Team & Settings */}
+            <Route path="/team" element={<TeamPage />} />
+            <Route path="/settings" element={<SettingsPage />} />
+
+            {/* Files */}
+            <Route path="/files" element={<FilesPage />} />
+            <Route path="/files/all" element={<AllFilesPage />} />
+            <Route path="/files/folder/:id" element={<FolderPage />} />
+            <Route path="/files/starred" element={<StarredPage />} />
+            <Route path="/files/trash" element={<TrashPage />} />
+            <Route path="/files/stats" element={<FileStatsPage />} />
+
+            {/* Tasks & Analytics */}
+            <Route path="/tasks/my" element={<MyTasksPage />} />
+            <Route path="/tasks" element={<Navigate to="/tasks/my" replace />} />
+            <Route path="/analytics" element={<AnalyticsPage />} />
+          </Route>
+
+          {/* 404 Not Found */}
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </Shell>
+      <Toaster position="top-center" toastOptions={{ duration: 3000 }} />
+    </BrowserRouter>
+  );
+}
