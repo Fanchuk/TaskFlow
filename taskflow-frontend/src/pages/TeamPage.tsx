@@ -38,8 +38,9 @@ export default function TeamPage() {
   });
 
   const { data: history } = useQuery({
-    queryKey: ['chat', activeChat.id],
+    queryKey: ['chat', activeChat.id ?? 'general'],
     queryFn: () => chatService.messages(activeChat.id ?? undefined),
+    refetchOnMount: 'always',
   });
 
   useEffect(() => { 
@@ -85,7 +86,7 @@ export default function TeamPage() {
     mutationFn: () => chatService.clear(activeChat.id ?? undefined),
     onSuccess: () => {
       setMsgs([]);
-      queryClient.invalidateQueries({ queryKey: ['chat', activeChat.id] });
+      queryClient.invalidateQueries({ queryKey: ['chat', activeChat.id ?? 'general'] });
       toast.success('Chat cleared');
     },
   });
@@ -94,7 +95,7 @@ export default function TeamPage() {
     mutationFn: (messageId: string) => chatService.deleteMessage(messageId),
     onSuccess: (_, messageId) => {
       setMsgs((prev) => prev.filter((m) => m.id !== messageId));
-      queryClient.invalidateQueries({ queryKey: ['chat', activeChat.id] });
+      queryClient.invalidateQueries({ queryKey: ['chat', activeChat.id ?? 'general'] });
     },
     onError: () => toast.error('Failed to delete message'),
   });
