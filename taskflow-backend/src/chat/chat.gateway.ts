@@ -9,7 +9,11 @@ import { ChatService } from './chat.service';
 
 @WebSocketGateway({
   cors: {
-    origin: ['https://твоя-назва-на-vercel.vercel.app', 'http://localhost:5173'],
+    origin: [
+      'https://task-flow-bay-nu.vercel.app',
+      'https://task-flow-git-main-fanfotballon-6003s-projects.vercel.app',
+      'http://localhost:5173',
+    ],
     credentials: true,
   },
 })
