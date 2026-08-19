@@ -44,6 +44,41 @@ export class ProjectsService {
     return project;
   }
 
+  async overview(userId: string, id: string) {
+    const project = await this.prisma.project.findFirst({
+      where: { id, ownerId: userId },
+      include: {
+        tasks: { select: { status: true, priority: true, doneAt: true } },
+        members: { include: { user: { select: { id: true, fullName: true } } } },
+      },
+    });
+    if (!project) throw new NotFoundException('Project not found');
+
+    const tasks = project.tasks;
+    const done = tasks.filter((t) => t.status === 'done').length;
+    const byStatus = {
+      todo: tasks.filter((t) => t.status === 'todo').length,
+      in_progress: tasks.filter((t) => t.status === 'in_progress').length,
+      done,
+    };
+    const recent = await this.prisma.task.findMany({
+      where: { projectId: id, doneAt: { not: null } },
+      orderBy: { doneAt: 'desc' },
+      take: 5,
+      include: { assignee: { select: { fullName: true } } },
+    });
+
+    return {
+      title: project.title,
+      desc: project.desc,
+      total: tasks.length,
+      progress: tasks.length ? Math.round((done / tasks.length) * 100) : 0,
+      byStatus,
+      members: project.members.map((m) => m.user),
+      recent,
+    };
+  }
+
   create(userId: string, data: { title: string; desc: string; color?: string }) {
     return this.prisma.project.create({
       data: { ...data, ownerId: userId },

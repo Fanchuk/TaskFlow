@@ -9,8 +9,11 @@ export class TasksService {
   findByProject(projectId: string) {
     return this.prisma.task.findMany({
       where: { projectId },
-      orderBy: [{ status: 'asc' }, { order: 'asc' }],
-      include: { _count: { select: { comments: true, attachments: true } } },
+      orderBy: { order: 'asc' },
+      include: {
+        assignee: { select: { id: true, fullName: true } },
+        _count: { select: { comments: true, attachments: true } },
+      },
     });
   }
 
@@ -37,6 +40,7 @@ export class TasksService {
         projectId: dto.projectId,
         priority: dto.priority ?? 'medium',
         status: dto.status ?? 'todo',
+        startDate: dto.startDate ? new Date(dto.startDate) : new Date(),
         dueDate: dto.dueDate ? new Date(dto.dueDate) : null,
         order: count,
       },
@@ -46,7 +50,11 @@ export class TasksService {
   update(id: string, dto: UpdateTaskDto) {
     return this.prisma.task.update({
       where: { id },
-      data: { ...dto, dueDate: dto.dueDate ? new Date(dto.dueDate) : undefined },
+      data: {
+        ...dto,
+        startDate: dto.startDate ? new Date(dto.startDate) : undefined,
+        dueDate: dto.dueDate ? new Date(dto.dueDate) : undefined,
+      },
     });
   }
 
@@ -65,10 +73,26 @@ export class TasksService {
             order: it.order,
             doneAt: it.status === 'done' ? new Date() : null,
           },
-        }),
+        })
       ),
     );
     return { ok: true };
+  }
+
+  assign(id: string, assigneeId: string | null) {
+    return this.prisma.task.update({ where: { id }, data: { assigneeId } });
+  }
+
+  projectMembers(projectId: string) {
+    return this.prisma.user.findMany({
+      where: {
+        OR: [
+          { ownedProjects: { some: { id: projectId } } },
+          { memberships: { some: { projectId: projectId } } }
+        ]
+      },
+      select: { id: true, fullName: true, email: true },
+    });
   }
 
   remove(id: string) {

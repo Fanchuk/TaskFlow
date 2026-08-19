@@ -13,6 +13,11 @@ export class TasksController {
     return this.tasks.findByProject(projectId);
   }
 
+  @Get('project/:projectId/members')
+  projectMembers(@Param('projectId') projectId: string) {
+    return this.tasks.projectMembers(projectId);
+  }
+
   @Get(':id')
   one(@Param('id') id: string) {
     return this.tasks.findOne(id);
@@ -36,6 +41,11 @@ export class TasksController {
   @Patch(':id/status')
   setStatus(@Param('id') id: string, @Body('status') status: string) {
     return this.tasks.setStatus(id, status);
+  }
+
+  @Patch(':id/assign')
+  assign(@Param('id') id: string, @Body('assigneeId') assigneeId: string | null) {
+    return this.tasks.assign(id, assigneeId);
   }
 
   @Delete(':id')

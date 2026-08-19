@@ -5,6 +5,7 @@ import {
 import { Server, Socket } from 'socket.io';
 import { JwtService } from '@nestjs/jwt';
 import { PrismaService } from '../prisma/prisma.service';
+import { ChatService } from './chat.service';
 
 @WebSocketGateway({ cors: { origin: 'http://localhost:5173' } })
 export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
@@ -13,6 +14,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
   constructor(
     private prisma: PrismaService,
     private jwt: JwtService,
+    private chatService: ChatService,
   ) {}
 
   async handleConnection(client: Socket) {
@@ -32,6 +34,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
       }) as { sub: string };
 
       client.data.userId = payload.sub;
+      client.join(`user:${payload.sub}`);
 
       await this.prisma.user.update({
         where: { id: payload.sub },
@@ -54,20 +57,21 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
     this.server.emit('user:status', { userId, status: 'offline' });
   }
 
-  @SubscribeMessage('message')
+  @SubscribeMessage('message:send')
   async onMessage(
     @ConnectedSocket() client: Socket,
-    @MessageBody() data: { body: string },
+    @MessageBody() data: { text?: string; receiverId?: string; fileUrl?: string; fileType?: string; fileName?: string },
   ) {
     const senderId = client.data.userId;
     if (!senderId) return;
 
-    const msg = await this.prisma.message.create({
-      data: { senderId, body: data.body },
-      include: { sender: { select: { id: true, fullName: true } } },
-    });
+    const msg = await this.chatService.send(senderId, data);
 
-    this.server.emit('message', msg);
+    if (data.receiverId) {
+      this.server.to(`user:${data.receiverId}`).to(`user:${senderId}`).emit('message:new', msg);
+    } else {
+      this.server.emit('message:new', msg);
+    }
   }
 
   @SubscribeMessage('room:join')

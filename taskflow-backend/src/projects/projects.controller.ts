@@ -13,6 +13,11 @@ export class ProjectsController {
     return this.projects.findAll(req.user.id);
   }
 
+  @Get(':id/overview')
+  overview(@Req() req: any, @Param('id') id: string) {
+    return this.projects.overview(req.user.id, id);
+  }
+
   @Get(':id')
   findOne(@Req() req: any, @Param('id') id: string) {
     return this.projects.findOne(req.user.id, id);

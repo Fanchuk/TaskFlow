@@ -5,12 +5,14 @@ export class CreateTaskDto {
   @IsString() projectId: string;
   @IsOptional() @IsIn(['low', 'medium', 'high']) priority?: string;
   @IsOptional() @IsIn(['todo', 'in_progress', 'done']) status?: string;
+  @IsOptional() @IsDateString() startDate?: string;
   @IsOptional() @IsDateString() dueDate?: string;
 }
 
 export class UpdateTaskDto {
   @IsOptional() @IsString() title?: string;
   @IsOptional() @IsIn(['low', 'medium', 'high']) priority?: string;
+  @IsOptional() @IsDateString() startDate?: string;
   @IsOptional() @IsDateString() dueDate?: string;
 }
 
