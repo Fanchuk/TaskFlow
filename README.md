@@ -14,6 +14,8 @@
 [![Socket.io](https://img.shields.io/badge/Socket.io-010101?logo=socketdotio&logoColor=white&style=flat-square)](https://socket.io)
 [![Google Gemini](https://img.shields.io/badge/Google_Gemini-AI-4285F4?logo=googlegemini&logoColor=white&style=flat-square)](https://ai.google.dev)
 
+[Live Demo](https://taskflow-YOUR-DEPLOY-ID.vercel.app) · [Report Bug](../../issues) · [Request Feature](../../issues)
+
 </div>
 
 ---
