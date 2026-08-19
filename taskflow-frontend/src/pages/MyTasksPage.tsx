@@ -3,7 +3,7 @@ import { motion } from 'motion/react'
 import { useNavigate } from 'react-router-dom'
 import { ChevronLeft } from 'lucide-react'
 import { statsService } from '../services/stats.service'
-import { PRIORITY_STYLE } from '../types'
+import { PRIORITY_STYLE, type Priority } from '../types'
 import Spinner from '../components/ui/Spinner'
 
 export default function MyTasksPage() {
@@ -37,7 +37,7 @@ export default function MyTasksPage() {
                                 <p className="text-sm text-white/50">{t.project.title}</p>
                             </div>
                             <div className="flex items-center gap-3">
-                                <span className={`rounded-full px-2.5 py-1 text-xs capitalize ${PRIORITY_STYLE[t.priority]}`}>{t.priority}</span>
+                                <span className={`rounded-full px-2.5 py-1 text-xs capitalize ${PRIORITY_STYLE[t.priority as Priority]}`}>{t.priority}</span>
                                 {t.dueDate && <span className="text-sm text-white/50">{new Date(t.dueDate).toLocaleDateString()}</span>}
                             </div>
                         </motion.div>

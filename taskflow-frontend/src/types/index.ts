@@ -1,4 +1,3 @@
-// --- Проєкти ---
 export type ProjectStatus = 'active' | 'on-hold' | 'completed';
 
 export type Project = {
@@ -17,9 +16,14 @@ export type StatusOverview = {
   done: number;
 };
 
-// --- Задачі ---
 export type TaskStatus = 'todo' | 'in_progress' | 'done';
 export type Priority = 'low' | 'medium' | 'high';
+
+export type User = {
+  id: string;
+  fullName: string;
+  role?: string;
+};
 
 export type Task = {
   id: string;
@@ -28,6 +32,8 @@ export type Task = {
   priority: Priority;
   order: number;
   dueDate: string | null;
+  projectId?: string;
+  assignee?: { fullName: string } | null;
   _count?: { comments: number; attachments: number };
 };
 

@@ -8,7 +8,10 @@ import { tasksService } from '../../services/tasks.service';
 export default function AssigneePicker({ taskId, projectId, current }: { taskId: string; projectId: string; current?: { fullName: string } | null }) {
   const qc = useQueryClient();
   const [open, setOpen] = useState(false);
-  const { data: users = [] } = useQuery({ queryKey: ['users'], queryFn: tasksService.members });
+  const { data: users = [] } = useQuery<any[]>({ 
+    queryKey: ['users', projectId], 
+    queryFn: () => tasksService.members(projectId) 
+  });
 
   const assign = useMutation({
     mutationFn: (assigneeId: string | null) => tasksService.assign(taskId, assigneeId),

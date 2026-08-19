@@ -3,7 +3,7 @@ import { useOutletContext, useNavigate } from 'react-router-dom';
 import { motion } from 'motion/react';
 import Avatar from '../ui/Avatar';
 import { tasksService } from '../../services/tasks.service';
-import { PRIORITY_STYLE } from '../../types';
+import { PRIORITY_STYLE, type Priority } from '../../types';
 import Spinner from '../ui/Spinner';
 
 const PRIORITY_BAR: Record<string, string> = { high: 'bg-red-500', medium: 'bg-amber-500', low: 'bg-green-500' };
@@ -81,7 +81,7 @@ export default function TimelineView() {
                 {end.toLocaleDateString('en', { month: 'short', day: 'numeric' })}
               </span>
 
-              <span className={`shrink-0 rounded-full px-2.5 py-1 text-xs capitalize ${PRIORITY_STYLE[t.priority]}`}>
+              <span className={`shrink-0 rounded-full px-2.5 py-1 text-xs capitalize ${PRIORITY_STYLE[t.priority as Priority]}`}>
                 {t.priority}
               </span>
             </motion.div>

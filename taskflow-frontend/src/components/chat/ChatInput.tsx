@@ -28,7 +28,7 @@ export default function ChatInput({ onSend }: Props) {
 
     try {
       if (attachment) {
-        finalFileUrl = await chatService.upload(attachment.file, attachment.name);
+        finalFileUrl = await chatService.upload(attachment.file);
       }
 
       onSend({

@@ -30,7 +30,7 @@ export default function PreferencesTab() {
   });
 
   useEffect(() => {
-    if (me?.settings) setPrefs((p) => ({ ...p, ...me.settings }));
+    if (me?.settings) setPrefs((p: UserSettings) => ({ ...p, ...me.settings }));
   }, [me]);
 
   const save = useMutation({
@@ -44,22 +44,22 @@ export default function PreferencesTab() {
     <TabShell title="Preferences" onSave={() => save.mutate()} saving={save.isPending}>
       <div className="divide-y divide-[#374151]">
         <Row icon={Sun} label="Theme Mode">
-          <Toggle on={prefs.theme === 'dark'} onChange={() => setPrefs((p) => ({ ...p, theme: p.theme === 'dark' ? 'light' : 'dark' }))} />
+          <Toggle on={prefs.theme === 'dark'} onChange={() => setPrefs((p: UserSettings) => ({ ...p, theme: p.theme === 'dark' ? 'light' : 'dark' }))} />
         </Row>
         <Row icon={Globe} label="Language">
           <div className="relative w-36">
-            <select value={prefs.language} onChange={(e) => setPrefs((p) => ({ ...p, language: e.target.value }))} className={`w-full ${selectCls}`}>
+            <select value={prefs.language} onChange={(e) => setPrefs((p: UserSettings) => ({ ...p, language: e.target.value }))} className={`w-full ${selectCls}`}>
               <option>English</option><option>Ukrainian</option><option>Deutsch</option>
             </select>
             <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-white/50" />
           </div>
         </Row>
         <Row icon={Bell} label="Task Notifications">
-          <Toggle on={!!prefs.notifications} onChange={() => setPrefs((p) => ({ ...p, notifications: !p.notifications }))} />
+          <Toggle on={!!prefs.notifications} onChange={() => setPrefs((p: UserSettings) => ({ ...p, notifications: !p.notifications }))} />
         </Row>
         <Row icon={LayoutTemplate} label="Default Task View">
           <div className="relative w-36">
-            <select value={prefs.defaultView} onChange={(e) => setPrefs((p) => ({ ...p, defaultView: e.target.value as any }))} className={`w-full ${selectCls}`}>
+            <select value={prefs.defaultView} onChange={(e) => setPrefs((p: UserSettings) => ({ ...p, defaultView: e.target.value as any }))} className={`w-full ${selectCls}`}>
               <option>Kanban</option><option>List</option>
             </select>
             <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-white/50" />

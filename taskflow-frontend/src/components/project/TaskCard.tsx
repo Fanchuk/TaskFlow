@@ -23,7 +23,7 @@ export default function TaskCard({ task, onClick, dragging }: { task: Task; onCl
               <Calendar className="h-4 w-4" />{new Date(task.dueDate).toLocaleDateString()}
             </span>
           )}
-          <AssigneePicker taskId={task.id} projectId={task.projectId} current={task.assignee} />
+          <AssigneePicker taskId={task.id} projectId={task.projectId ?? ''} current={task.assignee} />
         </div>
         <div className="flex items-center gap-3">
           {!!task._count?.comments && <span className="flex items-center gap-1"><MessageSquare className="h-4 w-4" />{task._count.comments}</span>}

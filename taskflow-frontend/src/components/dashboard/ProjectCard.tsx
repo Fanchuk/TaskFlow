@@ -33,7 +33,7 @@ export default function ProjectCard({
         <span className={`flex h-9 w-9 items-center justify-center rounded-md text-sm font-bold text-white ${barColor}`}>
           {title.charAt(0)}
         </span>
-        <span className={`rounded-full px-3 py-1 text-xs font-medium ${STATUS[status] ?? STATUS.active}`}>
+        <span className={`rounded-full px-3 py-1 text-xs font-medium ${STATUS[status as keyof typeof STATUS] ?? STATUS.active}`}>
           {status}
         </span>
       </div>

@@ -7,7 +7,10 @@ import {
 import ProjectSidebar from "./ProjectSidebar";
 import Avatar from "../ui/Avatar";
 
-const COLUMNS = [
+type KanbanTask = { title: string; priority: string; pColor: string; date: string; sub?: string };
+type KanbanColumn = { key: string; label: string; dot: string; tasks: KanbanTask[] };
+
+const COLUMNS: KanbanColumn[] = [
   {
     key: "todo", label: "To Do", dot: "bg-amber-400",
     tasks: [{ title: "Content migration", priority: "Low", pColor: "bg-green-900/50 text-green-400", date: "10/25/2023" }],
@@ -37,7 +40,6 @@ export default function KanbanPage() {
       <ProjectSidebar open={open} onClose={() => setOpen(false)} />
 
       <div className="flex flex-1 flex-col overflow-hidden">
-        {/* Topbar */}
         <header className="flex items-center justify-between border-b border-[#374151] px-6 py-5">
           <div className="flex items-center gap-3">
             <button className="lg:hidden" onClick={() => setOpen(true)}><Menu className="h-6 w-6" /></button>
@@ -55,7 +57,6 @@ export default function KanbanPage() {
         </header>
 
         <main className="flex-1 overflow-y-auto px-6 py-6 md:px-10">
-          {/* Header row */}
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
             className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
             <div>
@@ -68,7 +69,6 @@ export default function KanbanPage() {
             </div>
 
             <div className="flex items-center gap-3 pl-9 lg:pl-0">
-              {/* view toggle */}
               <div className="flex items-center rounded-lg bg-[#1f2937] p-1">
                 <button onClick={() => setView("kanban")}
                   className={`flex items-center gap-2 rounded-md px-3 py-2 text-sm font-medium transition-colors ${view === "kanban" ? "bg-[#4f46e5] text-white" : "text-white/60"}`}>
@@ -86,7 +86,6 @@ export default function KanbanPage() {
             </div>
           </motion.div>
 
-          {/* Progress */}
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}
             className="mt-6 rounded-xl bg-[#1f2937] p-5">
             <div className="h-2.5 w-full overflow-hidden rounded-full bg-[#374151]">
@@ -98,7 +97,6 @@ export default function KanbanPage() {
             </div>
           </motion.div>
 
-          {/* Board + team */}
           <div className="mt-6 grid gap-6 xl:grid-cols-[1fr_320px]">
             <div className="grid gap-4 md:grid-cols-3">
               {COLUMNS.map((col, ci) => (
@@ -132,7 +130,6 @@ export default function KanbanPage() {
               ))}
             </div>
 
-            {/* Team members */}
             <motion.div initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.4 }}
               className="h-fit rounded-xl bg-[#1f2937] p-5">
               <div className="flex items-center justify-between">
