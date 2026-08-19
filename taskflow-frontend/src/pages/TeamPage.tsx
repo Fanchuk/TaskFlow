@@ -115,7 +115,11 @@ export default function TeamPage() {
         <ChatSidebar members={members} meId={me?.id} activeChat={activeChat} setActiveChat={setActiveChat} />
 
         <motion.div initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} className="flex min-h-0 flex-col rounded-xl bg-[#1f2937]">
-          <ChatHeader activeChat={activeChat} onClear={() => clearChat.mutate()} />
+          <ChatHeader 
+            activeChat={activeChat} 
+            onClear={() => clearChat.mutate()} 
+            canClear={me?.role === 'admin' || activeChat.id !== null} 
+          />
 
           <div className="flex-1 space-y-5 overflow-y-auto p-5">
             <AnimatePresence initial={false}>

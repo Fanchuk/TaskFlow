@@ -6,7 +6,7 @@ import TabShell from './TabShell';
 import Avatar from '../ui/Avatar';
 import { usersService } from '../../services/users.service';
 import { settingsService } from '../../services/settings.service';
-import { authService } from '../../services/auth.service';
+import { useAuthStore } from '../../stores/authStore';
 import { InviteModal } from '../team/InviteModal';
 
 export default function TeamTab() {
@@ -14,8 +14,8 @@ export default function TeamTab() {
   const [inviteOpen, setInviteOpen] = useState(false);
 
   const { data: members = [] } = useQuery({ queryKey: ['users'], queryFn: usersService.getAll });
-  const { data: me } = useQuery({ queryKey: ['me'], queryFn: authService.getMe });
-  const isAdmin = me?.role === 'admin';
+  const meUser = useAuthStore((s) => s.user);
+  const isAdmin = meUser?.role === 'admin';
 
   const changeRole = useMutation({
     mutationFn: ({ id, role }: { id: string; role: string }) => settingsService.updateRole(id, role),

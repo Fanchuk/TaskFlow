@@ -8,9 +8,10 @@ const STATUS_DOT: Record<string, string> = {
 interface Props {
   activeChat: { id: string | null; name: string; status?: string };
   onClear: () => void;
+  canClear: boolean;
 }
 
-export default function ChatHeader({ activeChat, onClear }: Props) {
+export default function ChatHeader({ activeChat, onClear, canClear }: Props) {
   return (
     <div className="flex items-center justify-between border-b border-[#374151] p-5">
       <div className="flex items-center gap-3">
@@ -32,9 +33,11 @@ export default function ChatHeader({ activeChat, onClear }: Props) {
         </div>
       </div>
 
-      <button onClick={onClear} className="flex items-center gap-2 rounded-lg px-3 py-1.5 text-sm text-red-400 transition-colors hover:bg-red-500/10">
-        <Trash2 className="h-4 w-4" /> <span className="hidden sm:inline">Clear Chat</span>
-      </button>
+      {canClear && (
+        <button onClick={onClear} className="flex items-center gap-2 rounded-lg px-3 py-1.5 text-sm text-red-400 transition-colors hover:bg-red-500/10">
+          <Trash2 className="h-4 w-4" /> <span className="hidden sm:inline">Clear Chat</span>
+        </button>
+      )}
     </div>
   );
 }
