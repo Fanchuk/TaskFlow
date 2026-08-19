@@ -13,8 +13,9 @@
 [![Vite](https://img.shields.io/badge/Vite-8-646CFF?logo=vite&logoColor=white&style=flat-square)](https://vitejs.dev)
 [![Socket.io](https://img.shields.io/badge/Socket.io-010101?logo=socketdotio&logoColor=white&style=flat-square)](https://socket.io)
 [![Google Gemini](https://img.shields.io/badge/Google_Gemini-AI-4285F4?logo=googlegemini&logoColor=white&style=flat-square)](https://ai.google.dev)
+[![Stripe](https://img.shields.io/badge/Stripe-635BFF?logo=stripe&logoColor=white&style=flat-square)](https://stripe.com)
 
-[Live Demo](https://taskflow-YOUR-DEPLOY-ID.vercel.app) · [Report Bug](../../issues) · [Request Feature](../../issues)
+[Live Demo](https://task-flow-git-main-fanfotballon-6003s-projects.vercel.app) · [Report Bug](../../issues) · [Request Feature](../../issues)
 
 </div>
 
@@ -22,7 +23,7 @@
 
 ## About
 
-TaskFlow is a complete task and project management platform built to mirror what a real SaaS product looks like end-to-end: a NestJS + PostgreSQL backend, a React + TypeScript frontend, JWT authentication with session tracking, AI-assisted planning, live team chat, and a Google-Drive-style file manager — all wired together with a real database, not mock data.
+TaskFlow is a complete task and project management platform built to mirror what a real SaaS product looks like end-to-end: a NestJS + PostgreSQL backend, a React + TypeScript frontend, JWT authentication with session tracking, AI-assisted planning, live team chat, Stripe subscription billing, and a Google-Drive-style file manager — all wired together with a real database, not mock data.
 
 **Why it's worth a look:**
 
@@ -31,6 +32,7 @@ TaskFlow is a complete task and project management platform built to mirror what
 - ⚡ Real-time chat (group + DMs) with images, video, files, and voice messages
 - 🖱️ Drag-and-drop Kanban board built with `dnd-kit`
 - 🔐 JWT auth with device/browser/IP session tracking and role-based guards
+- 💳 Stripe subscription checkout with plan tiers and webhooks
 - 🗂️ File manager with folders, sharing, starring, and a soft-delete trash system
 - 📊 A dashboard with live charts, deadlines, priority breakdowns, and an activity feed
 
@@ -98,6 +100,11 @@ TaskFlow is a complete task and project management platform built to mirror what
 - **AI Task Generator** — describe a project, get 5–7 concrete suggested tasks (Google Gemini), review and add them in one click
 - **AI Progress Summary** — generates a short natural-language status update for any project based on its current tasks
 
+### Billing
+- Stripe subscription checkout with Individuals and Elite Team tiers
+- Monthly / yearly billing toggle with automatic price switching
+- Secure hosted Stripe Checkout redirect and webhook-driven subscription updates
+
 ### Team Collaboration
 - General team chat plus one-on-one private messages
 - Send text, images, video, files, and voice messages (recorded in-browser via the MediaRecorder API)
@@ -152,6 +159,7 @@ TaskFlow is a complete task and project management platform built to mirror what
 | Validation | class-validator |
 | Real-time | Socket.io (WebSocket Gateway) |
 | AI | Google Gemini API |
+| Payments | Stripe |
 | Session parsing | ua-parser-js |
 
 ---
@@ -172,12 +180,13 @@ TaskFlow is a complete task and project management platform built to mirror what
                                                      │   (Neon)          │
                                                      └──────────────────┘
 
-                        ┌──────────────────┐
-                        │  Google Gemini AI │  ← task generation & summaries
-                        └──────────────────┘
+           ┌──────────────────┐        ┌──────────────────┐
+           │  Google Gemini AI │        │      Stripe       │
+           │ tasks & summaries │        │  subscriptions    │
+           └──────────────────┘        └──────────────────┘
 ```
 
-The frontend and backend are separate applications communicating over a REST API, with a dedicated WebSocket gateway handling live chat. Every feature — auth, projects, files, chat — is its own NestJS module with its own Prisma-backed service, keeping the backend modular and easy to extend.
+The frontend and backend are separate applications communicating over a REST API, with a dedicated WebSocket gateway handling live chat. Every feature — auth, projects, files, chat, payments — is its own NestJS module with its own Prisma-backed service, keeping the backend modular and easy to extend.
 
 ---
 
@@ -191,12 +200,15 @@ taskflow-frontend/
 │   │   ├── project/        # Kanban, List, Calendar, Timeline, Task Drawer, AI panel
 │   │   ├── files/          # Folder cards, file rows, upload/share/preview modals
 │   │   ├── settings/       # Profile, Preferences, Account, Team tabs
+│   │   ├── landing/        # Landing sections, modals, header/footer
+│   │   ├── motion/         # Animated decor, reveal wrappers
 │   │   ├── layout/         # AppLayout, Sidebar, Topbar
 │   │   └── ui/             # Modal, Avatar, Spinner, ConfirmModal, buttons
 │   ├── pages/               # Route-level pages (Dashboard, Projects, Files, Team, Settings...)
 │   ├── services/            # Axios API clients, grouped by domain
 │   ├── stores/               # Zustand stores (auth, theme)
-│   ├── hooks/                # Shared hooks (e.g. task filters)
+│   ├── hooks/                # Shared hooks (e.g. task filters, CTA)
+│   ├── styles/                # Theme tokens & global styles
 │   └── types.ts
 └── public/
     └── screenshots/          # README screenshots
@@ -212,9 +224,10 @@ taskflow-backend/
 │   ├── files/                     # Folders, files, sharing, trash, stats
 │   ├── chat/                       # WebSocket gateway + REST history
 │   ├── invitations/                 # Team invites
-│   ├── ai/                           # Gemini task generation & summaries
-│   ├── stats/                         # Dashboard analytics endpoints
-│   └── prisma/                         # PrismaService
+│   ├── payments/                     # Stripe checkout & webhooks
+│   ├── ai/                             # Gemini task generation & summaries
+│   ├── stats/                           # Dashboard analytics endpoints
+│   └── prisma/                           # PrismaService
 └── prisma/
     ├── schema.prisma
     └── migrations/
@@ -245,6 +258,7 @@ taskflow-backend/
 - Node.js 18+
 - A PostgreSQL database (this project uses [Neon](https://neon.tech))
 - A [Google Gemini API key](https://ai.google.dev)
+- A [Stripe account](https://stripe.com) with test API keys
 
 ### 1. Clone the repository
 
@@ -285,6 +299,11 @@ The app will be available at `http://localhost:5173`, with the API running on `h
 DATABASE_URL="postgresql://user:password@host/dbname?sslmode=require"
 JWT_SECRET="your-jwt-secret"
 GEMINI_API_KEY="your-google-gemini-api-key"
+STRIPE_SECRET_KEY="your-stripe-secret-key"
+STRIPE_PRICE_INDIVIDUALS="price_xxx"
+STRIPE_PRICE_ELITE="price_xxx"
+STRIPE_WEBHOOK_SECRET="whsec_xxx"
+CLIENT_URL="http://localhost:5173"
 PORT=3001
 ```
 
