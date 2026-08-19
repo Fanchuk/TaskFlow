@@ -9,7 +9,12 @@ async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule, { rawBody: true });
 
   app.enableCors({
-    origin: ['https://task-flow-bay-nu.vercel.app', 'http://localhost:5173'],
+    origin: [
+      'https://task-flow-bay-nu.vercel.app',
+      'https://task-flow-git-main-fanfotballon-6003s-projects.vercel.app',
+      'https://task-flow-gxys2nkhn-fanfotballon-6003s-projects.vercel.app',
+      'http://localhost:5173',
+    ],
     credentials: true,
   });
 
